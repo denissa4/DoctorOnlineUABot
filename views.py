@@ -51,11 +51,11 @@ async def create_finish_buttons(buttons_name: dict, channel):
     else:
         postback = ActionTypes.post_back
     button = CardAction(type=ActionTypes.open_url,
-                        title="Забронювати 20хв",
+                        title="20хв",
                         value=buttons_name.get('20'))
     buttons.append(button)
     button = CardAction(type=ActionTypes.open_url,
-                        title="Забронювати 40хв",
+                        title="40хв",
                         value=buttons_name.get('40'))
     buttons.append(button)
     # =====================================================
