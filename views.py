@@ -100,7 +100,7 @@ async def second_stage_func(conversation_data, context, url_dict):
 
 async def dialog_view(context: TurnContext, conversation_data) -> web.Response:
     # Get response from nlsql API
-    zero_stage = ("Для дітей", "Для дорослих", "Психологічна допомога")
+    zero_stage = ("Для Дітей", "Для Дорослих", "Психологічна допомога")
 
     childs_doc = ("Алергологія", "Анестезіологія", "Гастроентерологія", "Гінекологія", "Імунологія",
                   "Неврологія", "Пульмонологія", "Інфекційні хвороби", "Сімейна медицина")
