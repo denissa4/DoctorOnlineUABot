@@ -151,10 +151,6 @@ async def dialog_view(context: TurnContext, conversation_data) -> web.Response:
     url_dict = {"Для Дітей": childs_url, "Для Дорослих": adults_url, "Психологічна допомога": psychology_url}
     first_stage = {"Для Дітей": childs_doc, "Для Дорослих": adults_doc, "Психологічна допомога": psychology_doc}
     response = await create_typing_activity(context.activity)
-    print(conversation_data.numeric_stage)
-    print(conversation_data.stage)
-    print(context.activity.text)
-    print(first_stage)
     await context.send_activity(response)
     if context.activity.text in zero_stage:
         conversation_data.stage = context.activity.text
