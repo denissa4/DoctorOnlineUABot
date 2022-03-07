@@ -64,7 +64,7 @@ async def create_finish_buttons(buttons_name: dict, channel):
                             value="Назад")
     buttons.append(button_back)
     attachments = create_hero_card('', buttons,
-                                   text="Виберіть необхідну опцію")
+                                   text="Забронювати зустріч на")
     attachments = MessageFactory.carousel([attachments], text=None)
     return attachments
 
