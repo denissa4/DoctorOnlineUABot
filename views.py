@@ -100,7 +100,7 @@ async def second_stage_func(conversation_data, context, url_dict):
 
 async def dialog_view(context: TurnContext, conversation_data) -> web.Response:
     # Get response from nlsql API
-    zero_stage = ("Для Дітей", "Для Дорослих", "Психологічна допомога")
+    zero_stage = ("Для дітей", "Для дорослих", "Психологічна допомога")
 
     childs_doc = ("Алергологія", "Анестезіологія", "Гастроентерологія", "Гінекологія", "Імунологія",
                   "Неврологія", "Пульмонологія", "Інфекційні хвороби", "Сімейна медицина")
@@ -140,7 +140,7 @@ async def dialog_view(context: TurnContext, conversation_data) -> web.Response:
                   {"20": "https://calendly.com/d/cn7-42v-8xm/20", "40": "https://calendly.com/d/crw-3hd-vrk/40"},
                   {"20": "https://calendly.com/d/crb-cmq-9cr/20", "40": "https://calendly.com/d/cnm-kwh-3dj/40"},
                   {"20": "https://calendly.com/d/cq5-jk9-m6f/20", "40": "https://calendly.com/d/cq5-tct-zwc/40"},
-                  {"20": "https://calendly.com/d/cqx-v9y-pfw/20"},)
+                  {"20": "https://calendly.com/d/cqx-v9y-pfw/20", "40": "https://calendly.com/d/cqx-v9y-pfw/20"},)
     adults_url = dict(zip(adults_doc, adults_url))
 
     psychology_doc = ("Дитяча Медична психологія", "Перша психологічна допомога")
