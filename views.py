@@ -102,28 +102,35 @@ async def dialog_view(context: TurnContext, conversation_data) -> web.Response:
     # Get response from nlsql API
     zero_stage = ("Для Дітей", "Для Дорослих", "Психологічна допомога")
 
-    childs_doc = ("Алергологія", "Анестезіологія", "Гастроентерологія", "Гінекологія", "Імунологія",
-                  "Неврологія", "Пульмонологія", "Інфекційні хвороби", "Сімейна медицина")
+    childs_doc = ("Анестезіологія", "Гастроентерологія", "Гінекологія", "Імунологія",
+                  "Неврологія", "Пульмонологія", "Інфекційні хвороби", "Сімейна медицина", "Дерматовенерологія",
+                  "Стоматолог")
 
-    childs_url = ({"20": "https://calendly.com/d/cq9-29s-v8j/20", "40": "https://calendly.com/d/cq9-3pn-zhs/40"},
-                  {"20": "https://calendly.com/d/cq5-jx7-n2w/20", "40": "https://calendly.com/d/cnr-psn-zrg/40"},
+    childs_url = ({"20": "https://calendly.com/d/cq5-jx7-n2w/20", "40": "https://calendly.com/d/cnr-psn-zrg/40"},
                   {"20": "https://calendly.com/d/crw-y24-cqq/20", "40": "https://calendly.com/d/cq8-78q-55y/40"},
                   {"20": "https://calendly.com/d/cq9-zq3-x5b/20", "40": "https://calendly.com/d/crx-wr7-wb5/40"},
                   {"20": "https://calendly.com/d/crw-p9h-4qw/20", "40": "https://calendly.com/d/cnr-y3w-nwv/40"},
                   {"20": "https://calendly.com/d/cpc-rjv-ytp/20", "40": "https://calendly.com/d/crx-6k6-f2t/40"},
                   {"20": "https://calendly.com/d/cq9-29q-zyv/20", "40": "https://calendly.com/d/cn6-yht-bsw/40"},
                   {"20": "https://calendly.com/d/crx-569-kd6/20", "40": "https://calendly.com/d/cpd-jcv-xp5/40"},
-                  {"20": "https://calendly.com/d/cq8-v2z-ttb/20", "40": "https://calendly.com/d/crw-2v9-ksp/40"},)
+                  {"20": "https://calendly.com/d/cq8-v2z-ttb/20", "40": "https://calendly.com/d/crw-2v9-ksp/40"},
+                  {"20": "https://calendly.com/d/cn6-8zy-yf4/20", "40": "https://calendly.com/d/cnr-y8q-p6d/40"},
+                  {"20": "https://calendly.com/d/crr-np9-rdg/20", "40": "https://calendly.com/d/crr-np9-rdg/20"},)
     childs_url = dict(zip(childs_doc, childs_url))
-    adults_doc = ("Акушерство і гінекологія", "Гастроентерологія", "Дерматовенерологія", "Ендокринологія",
+    adults_doc = ("Акушерство і гінекологія", "Ендокринолог-гінеколог", "Онкологія", "Гастроентерологія",
+                  "Дерматовенерологія", "Ендокринологія", "Проф патологія", "Фтизіатрія",
                   "Інфекційні хвороби", "Кардіологія", "Неврологія", "Неонатологія", "Нефрологія",
                   "Педіатрія", "Проктологія", "Пульмонологія", "Ревматологія", "Сімейна медицина",
                   "Судинна хірургія", "Терапія", "Урологія", "Хірургічна стоматологія",
-                  "Хірургія", "Інше")
+                  "Хірургія", "Стоматолог", "ЛОР", "Інше")
 
     adults_url = ({"20": "https://calendly.com/d/cnk-8hp-drx/20", "40": "https://calendly.com/d/crx-4r6-zwj/40"},
+                  {"20": "https://calendly.com/d/cn6-995-y5c/20", "40": "https://calendly.com/d/crb-bz4-6rs/40"},
+                  {"20": "https://calendly.com/d/crr-h67-hwb/20", "40": "https://calendly.com/d/cn6-775-tc4/40"},
                   {"20": "https://calendly.com/d/cn7-43v-mdp/20", "40": "https://calendly.com/d/cnr-y22-g7k/40"},
                   {"20": "https://calendly.com/d/crq-8s4-fkf/20", "40": "https://calendly.com/d/crw-3jb-8wv/40"},
+                  {"20": "https://calendly.com/d/cnm-kwq-zvc/20", "40": "https://calendly.com/d/cq4-g8h-298/40"},
+                  {"20": "https://calendly.com/d/cn8-dzy-b55/20", "40": "https://calendly.com/d/crr-bf7-wxh/40"},
                   {"20": "https://calendly.com/d/crb-cg6-qw3/20", "40": "https://calendly.com/d/cq5-mdj-mg8/40"},
                   {"20": "https://calendly.com/d/cnr-y6d-f8s/20", "40": "https://calendly.com/d/cnr-2n6-65r/40"},
                   {"20": "https://calendly.com/d/crw-yzy-38f/20", "40": "https://calendly.com/d/crs-cjh-mn2/40"},
@@ -140,13 +147,23 @@ async def dialog_view(context: TurnContext, conversation_data) -> web.Response:
                   {"20": "https://calendly.com/d/cn7-42v-8xm/20", "40": "https://calendly.com/d/crw-3hd-vrk/40"},
                   {"20": "https://calendly.com/d/crb-cmq-9cr/20", "40": "https://calendly.com/d/cnm-kwh-3dj/40"},
                   {"20": "https://calendly.com/d/cq5-jk9-m6f/20", "40": "https://calendly.com/d/cq5-tct-zwc/40"},
-                  {"20": "https://calendly.com/d/cqx-v9y-pfw/20", "40": "https://calendly.com/d/cqx-v9y-pfw/20"},)
+                  {"20": "https://calendly.com/d/cpd-tcw-rkr/20", "40": "https://calendly.com/d/cnk-fq9-8c4/40"},
+                  {"20": "https://calendly.com/d/cn8-7gr-bsx/20", "40": "https://calendly.com/d/crv-ydw-rzz/40"},
+                  {"20": "https://calendly.com/d/cq8-v2z-ttb/20", "40": "https://calendly.com/d/crw-2v9-ksp/40"},)
     adults_url = dict(zip(adults_doc, adults_url))
 
-    psychology_doc = ("Дитяча Медична психологія", "Перша психологічна допомога")
+    psychology_doc = ("Дитяча Медична психологія", "Перша психологічна допомога", "Нарколог", "Психіатр", "Психолог",
+                      "Психотерапевт", "Психофізіолог", "Сексолог", "Підлітковий психолог")
 
     psychology_url = ({"20": "https://calendly.com/d/cnq-k6m-9vz/20", "40": "https://calendly.com/d/cnk-93v-428/40"},
-                      {"20": "https://calendly.com/d/cnk-dqc-wmt/20", "40": "https://calendly.com/d/cpd-vm8-kpz/40"})
+                      {"20": "https://calendly.com/d/cnk-dqc-wmt/20", "40": "https://calendly.com/d/cpd-vm8-kpz/40"},
+                      {"20": "https://calendly.com/d/cpc-p6q-6f3/20", "40": "https://calendly.com/d/cq4-hy7-xw3/40"},
+                      {"20": "https://calendly.com/d/crw-sv8-26b/20", "40": "https://calendly.com/d/cq8-w6p-p24/40"},
+                      {"20": "https://calendly.com/d/cnk-htg-8vy/20", "40": "https://calendly.com/d/crs-rmr-c6y/40"},
+                      {"20": "https://calendly.com/d/cn7-bs8-rrx/20", "40": "https://calendly.com/d/crb-cnf-wsk/40"},
+                      {"20": "https://calendly.com/d/cnq-pts-b8c/20", "40": "https://calendly.com/d/cq4-hwf-94y/40"},
+                      {"20": "https://calendly.com/d/crx-tzn-35n/20", "40": "https://calendly.com/d/cpc-htb-75r/40"},
+                      {"20": "https://calendly.com/d/cq4-gfs-f2t/20", "40": "https://calendly.com/d/cq4-jgx-m9t/40"})
     psychology_url = dict(zip(psychology_doc, psychology_url))
     url_dict = {"Для Дітей": childs_url, "Для Дорослих": adults_url, "Психологічна допомога": psychology_url}
     first_stage = {"Для Дітей": childs_doc, "Для Дорослих": adults_doc, "Психологічна допомога": psychology_doc}
