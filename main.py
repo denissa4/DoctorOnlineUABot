@@ -1,6 +1,5 @@
 #!/usr/local/bin/python3.6
 # -*- coding: utf-8 -*-
-import ssl
 from botbuilder.schema import Activity
 from aiohttp import web
 import asyncio
@@ -8,7 +7,6 @@ from botbuilder.core import (BotFrameworkAdapter, BotFrameworkAdapterSettings, C
 from bots import Bot
 import os
 import traceback
-import argparse
 
 
 # Bot App Credentials

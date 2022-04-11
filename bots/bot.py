@@ -17,7 +17,7 @@ class Bot(ActivityHandler):
     async def on_members_added_activity(self, members_added: [ChannelAccount], turn_context: TurnContext):
         for member in members_added:
             if member.id != turn_context.activity.recipient.id:
-                zero_stage = ("Для Дітей", "Для Дорослих", "Психологічна допомога")
+                zero_stage = ("Дитячі Лікарі", "Дорослі лікарі", "Псих. допомога")
                 await zero_stage_funct(zero_stage, turn_context)
                 return web.Response(status=200)
 
