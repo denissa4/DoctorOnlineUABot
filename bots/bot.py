@@ -17,6 +17,10 @@ class Bot(ActivityHandler):
     async def on_members_added_activity(self, members_added: [ChannelAccount], turn_context: TurnContext):
         for member in members_added:
             if member.id != turn_context.activity.recipient.id:
+                hello_msg = "Продовжуючи користуватись ботом ви погоджуєтесь з " \
+                            "[правилами користування](https://doctoronline.bsmu.edu.ua/terms) та " \
+                            "[політикою конфіденційності](https://doctoronline.bsmu.edu.ua/privacy) сервісу."
+                await turn_context.send_activity(hello_msg)
                 zero_stage = ("Дитячі Лікарі", "Дорослі лікарі", "Псих. допомога")
                 await zero_stage_funct(zero_stage, turn_context)
                 return web.Response(status=200)
