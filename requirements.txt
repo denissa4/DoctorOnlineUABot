@@ -1,6 +1,7 @@
 aiohttp>=3.0.0
 msrest>=0.6.6
-botbuilder-core==4.5.0b5
-botbuilder-schema==4.5.0b5
-botframework-connector==4.5.0b5
+botbuilder-core==4.14.2
+botbuilder-schema==4.14.2
+botframework-connector==4.14.2
+botbuilder-dialogs=4.14.2
 PyJWT==1.7.1

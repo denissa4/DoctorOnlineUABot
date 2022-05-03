@@ -44,7 +44,7 @@ async def create_buttons(buttons_name, channel, back=True):
     return attachments
 
 
-async def create_finish_buttons(buttons_name: dict, channel):
+async def create_finish_buttons(buttons_name: dict, channel, back=True):
     buttons = []
     if channel == 'msteams':
         postback = ActionTypes.im_back
@@ -55,10 +55,11 @@ async def create_finish_buttons(buttons_name: dict, channel):
                         value=buttons_name.get('20'))
     buttons.append(button)
     # =====================================================
-    button_back = CardAction(type=postback,
-                            title="Назад",
-                            value="Назад")
-    buttons.append(button_back)
+    if back:
+        button_back = CardAction(type=postback,
+                                title="Назад",
+                                value="Назад")
+        buttons.append(button_back)
     attachments = create_hero_card('', buttons,
                                    text="Забронювати зустріч на")
     attachments = MessageFactory.carousel([attachments], text=None)
