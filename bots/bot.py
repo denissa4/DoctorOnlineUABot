@@ -36,8 +36,9 @@ class Bot(ActivityHandler):
             for member in members_added:
                 if member.id != turn_context.activity.recipient.id:
                     await turn_context.send_activity(
-                        "Welcome to AuthenticationBot. Type anything to get logged in. Type "
-                        "'logout' to sign-out."
+                        "Ласкаво просимо до DoctorOnlineInUA бота. Напишіть що-небудь, щоб увійти. "
+                        "Напишіть 'вийти' щоб вийти. Напишіть 'вийти' щоб вийти. "
+                        "Напишіть 'допомога' щоб отримати більше інформації."
                     )
         else:
             for member in members_added:
