@@ -13,6 +13,8 @@ COPY ./main.py /1/main.py
 COPY ./views.py /1/views.py
 RUN mkdir bots
 COPY bots /1/bots
+COPY dialogs /1/dialogs
+COPY helpers /1/helpers
 
 RUN pip install -r /1/requirements.txt
 RUN apt-get autoremove -y && \
