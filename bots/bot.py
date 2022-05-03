@@ -32,7 +32,7 @@ class Bot(ActivityHandler):
         await self.user_state.save_changes(turn_context, False)
 
     async def on_members_added_activity(self, members_added: List[ChannelAccount], turn_context: TurnContext):
-        if turn_context.activity.channel_id != 'emulator':
+        if turn_context.activity.channel_id == 'msteams':
             for member in members_added:
                 if member.id != turn_context.activity.recipient.id:
                     await turn_context.send_activity(
@@ -51,7 +51,7 @@ class Bot(ActivityHandler):
                     return web.Response(status=200)
 
     async def on_message_activity(self, turn_context: TurnContext):
-        if turn_context.activity.channel_id != 'emulator':
+        if turn_context.activity.channel_id == 'msteams':
             conversation_data = await self.conversation_data_accessor.get(turn_context, ConversationData)
             await DialogHelper.run_dialog(
                 self.dialog,
