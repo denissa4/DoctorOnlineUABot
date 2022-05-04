@@ -15,7 +15,7 @@ async def create_help_activity_reply():
                           title="Політика конфіденційності",
                           value="https://doctoronline.bsmu.edu.ua/privacy"),
                CardAction(type=ActionTypes.open_url,
-                          title="Як це пряцює",
+                          title="Як це працює",
                           value="https://doctoronline.bsmu.edu.ua/#how-it-works"),
                CardAction(type=ActionTypes.open_url,
                           title="Часті запитання",
@@ -24,9 +24,43 @@ async def create_help_activity_reply():
     # here in place of `hero` you can specify `thumbnail` to send thumnail card.
     attachments = await create_hero_card('', buttons,
                                          text="Виберіть що вам потрібно")
-    response = MessageFactory.carousel([attachments], text=None)
+    return MessageFactory.carousel([attachments], text=None)
 
-    return response
+
+async def create_welcome_activity():
+    attachments = await create_adaptive_card()
+    return MessageFactory.carousel([attachments], text=None)
+
+
+async def create_adaptive_card():
+    card = {
+                "type": "AdaptiveCard",
+                "body": [
+                    {
+                        "type": "TextBlock",
+                        "text": "Ласкаво просимо до **DoctorOnlineInUA** бота. "
+                                "Напишіть _вийти_ щоб вийти. "
+                                "Напишіть _допомога_ щоб отримати більше інформації. "
+                                "Продовжуючи користуватись ботом ви погоджуєтесь з [правилами користування](https://doctoronline.bsmu.edu.ua/terms) та [політикою конфіденційності](https://doctoronline.bsmu.edu.ua/privacy) сервісу.",
+                        "wrap": True
+                    }
+                ],
+                "actions": [
+                    {
+                        "type": "Action.Submit",
+                        "title": "Почати",
+                        "data": "Почати"
+                    },
+                    {
+                        "type": "Action.Submit",
+                        "title": "Отримати більше інформації",
+                        "data": "Допомога"
+                    }
+                ],
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "version": "1.3"
+            }
+    return CardFactory.adaptive_card(card)
 
 
 async def create_hero_card(title, buttons, images=None, subtitle=None, text=None):

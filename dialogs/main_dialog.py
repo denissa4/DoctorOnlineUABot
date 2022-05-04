@@ -157,39 +157,25 @@ class MainDialog(LogoutDialog):
         # token directly from the prompt itself. There is an example of this in the next method.
         if step_context.result:
             await step_context.context.send_activity("Ви ввійшли в систему.")
-            hello_msg = "Продовжуючи користуватись ботом ви погоджуєтесь з " \
-                        "[правилами користування](https://doctoronline.bsmu.edu.ua/terms) та " \
-                        "[політикою конфіденційності](https://doctoronline.bsmu.edu.ua/privacy) сервісу."
-            options = ["Так", "Ні"]
-            return await step_context.prompt(
-                ChoicePrompt.__name__,
-                PromptOptions(
-                    prompt=MessageFactory.text(hello_msg),
-                    choices=self._to_choices(options),
-                ),
-            )
+            return await step_context.continue_dialog()
 
         await step_context.context.send_activity(
-            "Login was not successful please try again."
+            "Не вдалося ввійти, будь ласка, спробуйте ще раз."
         )
         return await step_context.end_dialog()
 
     async def phase1(
         self, step_context: WaterfallStepContext
     ) -> DialogTurnResult:
-        choice: FoundChoice = step_context.result
-        if choice.value == 'Так':
-            self.history.append(choice.value)
-            options = ["Дитячі Лікарі", "Дорослі лікарі", "Псих. допомога"]
-            return await step_context.prompt(
-                ChoicePrompt.__name__,
-                PromptOptions(
-                    prompt=MessageFactory.text("Виберіть необхідну категорію"),
-                    choices=self._to_choices(options),
-                ),
-            )
-
-        return await step_context.end_dialog()
+        options = ["Дитячі Лікарі", "Дорослі лікарі", "Псих. допомога"]
+        self.history.append(None)
+        return await step_context.prompt(
+            ChoicePrompt.__name__,
+            PromptOptions(
+                prompt=MessageFactory.text("Виберіть необхідну категорію"),
+                choices=self._to_choices(options),
+            ),
+        )
 
     async def phase2(self, step_context: WaterfallStepContext) -> DialogTurnResult:
         choice: FoundChoice = step_context.result

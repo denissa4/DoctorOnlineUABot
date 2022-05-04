@@ -3,6 +3,7 @@ from botbuilder.dialogs import Dialog
 from botbuilder.schema import ChannelAccount, Attachment, Activity, ActivityTypes
 from typing import List
 from helpers.dialog_helper import DialogHelper
+from helpers.activity_helper import create_welcome_activity
 from .ConversationData import ConversationData
 from views import *
 import traceback
@@ -35,11 +36,8 @@ class Bot(ActivityHandler):
         if turn_context.activity.channel_id == 'msteams':
             for member in members_added:
                 if member.id != turn_context.activity.recipient.id:
-                    await turn_context.send_activity(
-                        "Ласкаво просимо до DoctorOnlineInUA бота. Напишіть що-небудь, щоб увійти. "
-                        "Напишіть 'вийти' щоб вийти. Напишіть 'вийти' щоб вийти. "
-                        "Напишіть 'допомога' щоб отримати більше інформації."
-                    )
+                    activity = await create_welcome_activity()
+                    await turn_context.send_activity(activity)
         else:
             for member in members_added:
                 if member.id != turn_context.activity.recipient.id:

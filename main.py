@@ -77,6 +77,7 @@ async def messages(request: Request) -> Response:
     else:
         return Response(status=HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
     activity = Activity().deserialize(body)
+    print("[DoctorOnlineUABot]: ", body)
     auth_header = request.headers['Authorization'] if 'Authorization' in request.headers else ''
     if activity.type != 'typing':
         response = await ADAPTER.process_activity(activity, auth_header, BOT.on_turn)
