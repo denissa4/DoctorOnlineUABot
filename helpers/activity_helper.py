@@ -49,12 +49,24 @@ async def create_adaptive_card():
                     {
                         "type": "Action.Submit",
                         "title": "Почати",
-                        "data": "Почати"
+                        "data": {
+                                    "msteams": {
+                                        "type": "messageBack",
+                                        "displayText": "Почати",
+                                        "text": "Почати",
+                                    }
+                                  }
                     },
                     {
                         "type": "Action.Submit",
                         "title": "Отримати більше інформації",
-                        "data": "Допомога"
+                        "data": {
+                                    "msteams": {
+                                        "type": "messageBack",
+                                        "displayText": "Допомога",
+                                        "text": "Допомога",
+                                    }
+                                  }
                     }
                 ],
                 "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",

@@ -75,3 +75,11 @@ class Bot(ActivityHandler):
             turn_context,
             self.conversation_state.create_property("DialogState"), conversation_data
         )
+
+    async def on_sign_in_invoke(self, turn_context: TurnContext):
+        conversation_data = await self.conversation_data_accessor.get(turn_context, ConversationData)
+        await DialogHelper.run_dialog(
+            self.dialog,
+            turn_context,
+            self.conversation_state.create_property("DialogState"), conversation_data
+        )
