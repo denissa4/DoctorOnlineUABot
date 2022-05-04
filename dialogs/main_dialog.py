@@ -6,7 +6,7 @@ from botbuilder.dialogs import (
     DialogTurnResult,
     PromptOptions,
 )
-from botbuilder.dialogs.prompts import OAuthPrompt, OAuthPromptSettings, ConfirmPrompt, ChoicePrompt
+from botbuilder.dialogs.prompts import OAuthPrompt, OAuthPromptSettings, ChoicePrompt
 from botbuilder.dialogs.choices import Choice, FoundChoice
 from botbuilder.dialogs.dialog_reason import DialogReason
 
@@ -157,7 +157,9 @@ class MainDialog(LogoutDialog):
         # token directly from the prompt itself. There is an example of this in the next method.
         if step_context.result:
             await step_context.context.send_activity("Ви ввійшли в систему.")
-            return await step_context.continue_dialog()
+            dialog: WaterfallDialog = await self.find_dialog(step_context.active_dialog.id)
+            state = step_context.active_dialog.state
+            return await dialog.run_step(step_context, state['stepIndex'] + 1, DialogReason.ReplaceCalled, None)
 
         await step_context.context.send_activity(
             "Не вдалося ввійти, будь ласка, спробуйте ще раз."
