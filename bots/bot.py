@@ -1,6 +1,8 @@
 from botbuilder.core import ActivityHandler, ConversationState, UserState, TurnContext
+from botbuilder.core.teams import TeamsActivityHandler
 from botbuilder.dialogs import Dialog
 from botbuilder.schema import ChannelAccount, Attachment, Activity, ActivityTypes
+# from botbuilder.schema.teams import TabSubmit, TabRequest, TaskModuleRequest, TaskModuleResponse
 from typing import List
 from helpers.dialog_helper import DialogHelper
 from helpers.activity_helper import create_welcome_activity
@@ -9,7 +11,7 @@ from views import *
 import traceback
 
 
-class Bot(ActivityHandler):
+class Bot(TeamsActivityHandler):
     def __init__(self,
                  conversation_state: ConversationState,
                  user_state: UserState,
