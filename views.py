@@ -50,9 +50,15 @@ async def create_finish_buttons(buttons_name: dict, channel, back=True):
         postback = ActionTypes.im_back
     else:
         postback = ActionTypes.post_back
-    button = CardAction(type=ActionTypes.open_url,
-                        title="20хв",
-                        value=buttons_name.get('20'))
+    if channel == 'msteams':
+        button = CardAction(type=ActionTypes.open_url,
+                            title="20хв",
+                            value=buttons_name.get('20'),
+                            channel_data={"iconUrl": "https://icon-library.com/images/open-icon-png/open-icon-png-15.jpg"})
+    else:
+        button = CardAction(type=ActionTypes.open_url,
+                            title="20хв",
+                            value=buttons_name.get('20'))
     buttons.append(button)
     # =====================================================
     if back:

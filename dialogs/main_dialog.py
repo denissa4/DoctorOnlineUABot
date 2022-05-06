@@ -127,7 +127,7 @@ class MainDialog(LogoutDialog):
                     connection_name=connection_name,
                     text="Будь ласка, увійдіть",
                     title="Увійти",
-                    timeout=300000,
+                    timeout=30000,
                 ),
             )
         )

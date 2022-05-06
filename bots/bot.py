@@ -69,7 +69,7 @@ class Bot(TeamsActivityHandler):
                 response = "Трапилась помилка, спробуйте пізніше"
                 await turn_context.send_activity(response)
 
-    async def on_teams_signin_verify_state(self, turn_context: TurnContext):
+    async def on_sign_in_invoke(self, turn_context: TurnContext):
         # Run the Dialog with the new Token Response Event Activity.
         # The OAuth Prompt needs to see the Invoke Activity in order to complete the login process.
         conversation_data = await self.conversation_data_accessor.get(turn_context, ConversationData)
