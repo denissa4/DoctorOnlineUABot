@@ -128,6 +128,42 @@ async def create_adaptive_help_card():
     return CardFactory.adaptive_card(card)
 
 
+async def create_finish_adaptive_card(value_url):
+    card = {
+                "type": "AdaptiveCard",
+                "body": [
+                    {
+                        "type": "TextBlock",
+                        "text": "Забронювати зустріч на",
+                        "wrap": True
+                    }
+                ],
+                "actions": [
+                    {
+                        "type": "Action.OpenUrl",
+                        "title": "20хв",
+                        "iconUrl": "https://icon-library.com/images/open-icon-png/open-icon-png-15.jpg",
+                        "url": value_url
+                    },
+                    {
+                        "type": "Action.Submit",
+                        "title": "Повернутись назад",
+                        "data": {
+                                    "msteams": {
+                                        "type": "messageBack",
+                                        "displayText": "Повернутись назад",
+                                        "text": "Назад",
+                                        "value": "Назад"
+                                    }
+                                  }
+                    }
+                ],
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "version": "1.3"
+            }
+    return CardFactory.adaptive_card(card)
+
+
 async def create_hero_card(title, buttons, images=None, subtitle=None, text=None):
     card = HeroCard(title=title,
                     subtitle=subtitle,

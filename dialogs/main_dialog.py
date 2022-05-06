@@ -11,7 +11,7 @@ from botbuilder.dialogs.choices import Choice, FoundChoice
 from botbuilder.dialogs.dialog_reason import DialogReason
 
 from dialogs import LogoutDialog
-from views import *
+from helpers.activity_helper import create_finish_adaptive_card
 
 zero_stage = ("Дитячі Лікарі", "Дорослі лікарі", "Псих. допомога")
 
@@ -222,14 +222,9 @@ class MainDialog(LogoutDialog):
                 )
             else:
                 res_urls = url_dict_in_stage.get(choice.value)
-                response = await create_finish_buttons(res_urls, "msteams", back=False)
-                return await step_context.prompt(
-                    ChoicePrompt.__name__,
-                    PromptOptions(
-                        prompt=response,
-                        choices=self._to_choices(["Назад"]),
-                    ),
-                )
+                response = await create_finish_adaptive_card(res_urls.get("20", ""))
+                await step_context.context.send_activity(response)
+                return await step_context.continue_dialog()
 
         else:
             return await step_context.end_dialog()
@@ -250,14 +245,9 @@ class MainDialog(LogoutDialog):
         elif choice.value in surgery_doc:
             self.history.append(choice.value)
             res_urls = surgery_url.get(choice.value)
-            response = await create_finish_buttons(res_urls, "msteams", back=False)
-            return await step_context.prompt(
-                ChoicePrompt.__name__,
-                PromptOptions(
-                    prompt=response,
-                    choices=self._to_choices(["Назад"]),
-                ),
-            )
+            response = await create_finish_adaptive_card(res_urls.get("20", ""))
+            await step_context.context.send_activity(response)
+            return await step_context.continue_dialog()
         else:
             return await step_context.end_dialog()
 
