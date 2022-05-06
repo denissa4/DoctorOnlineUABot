@@ -41,6 +41,11 @@ async def create_help_activity():
     return MessageFactory.carousel([attachments], text=None)
 
 
+async def create_finish_acivity(value_url):
+    attachments = await create_finish_adaptive_card(value_url)
+    return MessageFactory.carousel([attachments], text=None)
+
+
 async def create_adaptive_card():
     card = {
                 "type": "AdaptiveCard",

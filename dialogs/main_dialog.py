@@ -11,7 +11,7 @@ from botbuilder.dialogs.choices import Choice, FoundChoice
 from botbuilder.dialogs.dialog_reason import DialogReason
 
 from dialogs import LogoutDialog
-from helpers.activity_helper import create_finish_adaptive_card
+from helpers.activity_helper import create_finish_acivity
 
 zero_stage = ("Дитячі Лікарі", "Дорослі лікарі", "Псих. допомога")
 
@@ -181,37 +181,10 @@ class MainDialog(LogoutDialog):
 
     async def phase2(self, step_context: WaterfallStepContext) -> DialogTurnResult:
         choice: FoundChoice = step_context.result
-        if choice.value:
-            self.history.append(choice.value)
-            options = first_stage.get(choice.value).copy()
-            options.append("Назад")
-            return await step_context.prompt(
-                ChoicePrompt.__name__,
-                PromptOptions(
-                    prompt=MessageFactory.text("Виберіть необхідну категорію"),
-                    choices=self._to_choices(options),
-                ),
-            )
-
-    async def phase3(
-            self, step_context: WaterfallStepContext
-    ) -> DialogTurnResult:
-        choice: FoundChoice = step_context.result
-        first_choice = first_stage.get(self.history[1])
-        if choice.value == 'Назад':
-            # len(history) >= 2
-            self.history.pop()
-            previous_choice = self.history.pop()
-            dialog: WaterfallDialog = await self.find_dialog(step_context.active_dialog.id)
-            state = step_context.active_dialog.state
-            return await dialog.run_step(step_context, state['stepIndex'] - 2, DialogReason.ReplaceCalled, Choice(value=previous_choice))
-
-        elif choice.value in first_choice:
-            url_dict_in_stage = url_dict.get(self.history[-1])
-            self.history.append(choice.value)
-            if choice.value == "Хірургія":
-                res_urls = url_dict_in_stage.get("Хірургія")
-                options = list(res_urls.keys()).copy()
+        if type(choice) == FoundChoice:
+            if choice.value:
+                self.history.append(choice.value)
+                options = first_stage.get(choice.value).copy()
                 options.append("Назад")
                 return await step_context.prompt(
                     ChoicePrompt.__name__,
@@ -220,51 +193,82 @@ class MainDialog(LogoutDialog):
                         choices=self._to_choices(options),
                     ),
                 )
-            else:
-                res_urls = url_dict_in_stage.get(choice.value)
-                response = await create_finish_adaptive_card(res_urls.get("20", ""))
-                await step_context.context.send_activity(response)
-                return await step_context.continue_dialog()
 
-        else:
-            return await step_context.end_dialog()
+        return await step_context.end_dialog()
+
+    async def phase3(
+            self, step_context: WaterfallStepContext
+    ) -> DialogTurnResult:
+        choice: FoundChoice = step_context.result
+        first_choice = first_stage.get(self.history[1])
+        if type(choice) == FoundChoice:
+            if choice.value == 'Назад':
+                # len(history) >= 2
+                self.history.pop()
+                previous_choice = self.history.pop()
+                dialog: WaterfallDialog = await self.find_dialog(step_context.active_dialog.id)
+                state = step_context.active_dialog.state
+                return await dialog.run_step(step_context, state['stepIndex'] - 2, DialogReason.ReplaceCalled, Choice(value=previous_choice))
+
+            elif choice.value in first_choice:
+                url_dict_in_stage = url_dict.get(self.history[-1])
+                self.history.append(choice.value)
+                if choice.value == "Хірургія":
+                    res_urls = url_dict_in_stage.get("Хірургія")
+                    options = list(res_urls.keys()).copy()
+                    options.append("Назад")
+                    return await step_context.prompt(
+                        ChoicePrompt.__name__,
+                        PromptOptions(
+                            prompt=MessageFactory.text("Виберіть необхідну категорію"),
+                            choices=self._to_choices(options),
+                        ),
+                    )
+                else:
+                    res_urls = url_dict_in_stage.get(choice.value)
+                    response = await create_finish_acivity(res_urls.get("20", ""))
+                    await step_context.context.send_activity(response)
+                    return await step_context.continue_dialog()
+
+        return await step_context.end_dialog()
 
     async def phase4(
             self, step_context: WaterfallStepContext
     ) -> DialogTurnResult:
         choice: FoundChoice = step_context.result
-        if choice.value == 'Назад':
-            # len(history) >= 2
-            self.history.pop()
-            previous_choice = self.history.pop()
-            dialog: WaterfallDialog = await self.find_dialog(step_context.active_dialog.id)
-            state = step_context.active_dialog.state
-            return await dialog.run_step(step_context, state['stepIndex'] - 2, DialogReason.ReplaceCalled,
-                                         Choice(value=previous_choice))
+        if type(choice) == FoundChoice:
+            if choice.value == 'Назад':
+                # len(history) >= 2
+                self.history.pop()
+                previous_choice = self.history.pop()
+                dialog: WaterfallDialog = await self.find_dialog(step_context.active_dialog.id)
+                state = step_context.active_dialog.state
+                return await dialog.run_step(step_context, state['stepIndex'] - 2, DialogReason.ReplaceCalled,
+                                             Choice(value=previous_choice))
 
-        elif choice.value in surgery_doc:
-            self.history.append(choice.value)
-            res_urls = surgery_url.get(choice.value)
-            response = await create_finish_adaptive_card(res_urls.get("20", ""))
-            await step_context.context.send_activity(response)
-            return await step_context.continue_dialog()
-        else:
-            return await step_context.end_dialog()
+            elif choice.value in surgery_doc:
+                self.history.append(choice.value)
+                res_urls = surgery_url.get(choice.value)
+                response = await create_finish_acivity(res_urls.get("20", ""))
+                await step_context.context.send_activity(response)
+                return await step_context.continue_dialog()
+        return await step_context.end_dialog()
 
     async def phase5(
             self, step_context: WaterfallStepContext
     ) -> DialogTurnResult:
         choice: FoundChoice = step_context.result
-        if choice.value == 'Назад':
-            # len(history) >= 2
-            self.history.pop()
-            previous_choice = self.history.pop()
-            dialog: WaterfallDialog = await self.find_dialog(step_context.active_dialog.id)
-            state = step_context.active_dialog.state
-            return await dialog.run_step(step_context, state['stepIndex'] - 2, DialogReason.ReplaceCalled,
-                                         Choice(value=previous_choice))
-        else:
-            return await step_context.end_dialog()
+        if type(choice) == FoundChoice:
+            if choice.value == 'Назад':
+                # len(history) >= 2
+                self.history.pop()
+                previous_choice = self.history.pop()
+                dialog: WaterfallDialog = await self.find_dialog(step_context.active_dialog.id)
+                state = step_context.active_dialog.state
+                return await dialog.run_step(step_context, state['stepIndex'] - 2, DialogReason.ReplaceCalled,
+                                             Choice(value=previous_choice))
+
+        return await step_context.end_dialog()
 
     def _to_choices(self, choices: [str]) -> List[Choice]:
         choice_list: List[Choice] = []
