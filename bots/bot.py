@@ -11,7 +11,7 @@ from views import *
 import traceback
 
 
-class Bot(TeamsActivityHandler):
+class Bot(ActivityHandler):
     def __init__(self,
                  conversation_state: ConversationState,
                  user_state: UserState,
