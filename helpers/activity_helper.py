@@ -36,6 +36,11 @@ async def create_welcome_activity():
     return MessageFactory.carousel([attachments], text=None)
 
 
+async def create_help_activity():
+    attachments = await create_adaptive_help_card()
+    return MessageFactory.carousel([attachments], text=None)
+
+
 async def create_adaptive_card():
     card = {
                 "type": "AdaptiveCard",
@@ -72,6 +77,50 @@ async def create_adaptive_card():
                                     }
                                   }
                     }
+                ],
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "version": "1.3"
+            }
+    return CardFactory.adaptive_card(card)
+
+
+async def create_adaptive_help_card():
+    card = {
+                "type": "AdaptiveCard",
+                "body": [
+                    {
+                        "type": "TextBlock",
+                        "text": "Виберіть що вам потрібно",
+                        "wrap": True
+                    }
+                ],
+                "actions": [
+                    {
+                        "type": "Action.OpenUrl",
+                        "title": "Правила користування",
+                        "iconUrl": "https://icon-library.com/images/open-icon-png/open-icon-png-15.jpg",
+                        "url": "https://doctoronline.bsmu.edu.ua/terms"
+                    },
+                    {
+                        "type": "Action.OpenUrl",
+                        "title": "Політика конфіденційності",
+                        "iconUrl": "https://icon-library.com/images/open-icon-png/open-icon-png-15.jpg",
+                        "url": "https://doctoronline.bsmu.edu.ua/privacy"
+                    },
+                    {
+                        "type": "Action.OpenUrl",
+                        "title": "Як це працює",
+                        "iconUrl": "https://icon-library.com/images/open-icon-png/open-icon-png-15.jpg",
+                        "url": "https://doctoronline.bsmu.edu.ua/#how-it-works"
+                    },
+                    {
+                        "type": "Action.OpenUrl",
+                        "title": "Часті запитання",
+                        "iconUrl": "https://icon-library.com/images/open-icon-png/open-icon-png-15.jpg",
+                        "url": "https://doctoronline.bsmu.edu.ua/#faq"
+                    },
+
+
                 ],
                 "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
                 "version": "1.3"

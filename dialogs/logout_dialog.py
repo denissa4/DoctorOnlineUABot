@@ -1,7 +1,7 @@
 from botbuilder.dialogs import DialogTurnResult, ComponentDialog, DialogContext, DialogTurnStatus
 from botbuilder.core import BotFrameworkAdapter
 from botbuilder.schema import ActivityTypes
-from helpers.activity_helper import create_help_activity_reply
+from helpers.activity_helper import create_help_activity
 
 
 class LogoutDialog(ComponentDialog):
@@ -31,7 +31,7 @@ class LogoutDialog(ComponentDialog):
                 await inner_dc.context.send_activity("Ви вийшли з облікового запису.")
                 return await inner_dc.cancel_all_dialogs()
             elif text in ["help", "?", "допомога"]:
-                help_message = await create_help_activity_reply()
+                help_message = await create_help_activity()
                 await inner_dc.context.send_activity(help_message)
                 return DialogTurnResult(DialogTurnStatus.Waiting)
         return None
