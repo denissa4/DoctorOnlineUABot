@@ -69,9 +69,17 @@ class Bot(TeamsActivityHandler):
                 response = "Трапилась помилка, спробуйте пізніше"
                 await turn_context.send_activity(response)
 
-    async def on_sign_in_invoke(self, turn_context: TurnContext):
+    async def on_token_response_event(self, turn_context: TurnContext):
         # Run the Dialog with the new Token Response Event Activity.
-        # The OAuth Prompt needs to see the Invoke Activity in order to complete the login process.
+        conversation_data = await self.conversation_data_accessor.get(turn_context, ConversationData)
+        await DialogHelper.run_dialog(
+            self.dialog,
+            turn_context,
+            self.conversation_state.create_property("DialogState"), conversation_data
+        )
+
+    async def on_sign_in_invoke(self, turn_context: TurnContext):
+        # Invoked when a signIn invoke activity is received from the connector.
         conversation_data = await self.conversation_data_accessor.get(turn_context, ConversationData)
         await DialogHelper.run_dialog(
             self.dialog,
