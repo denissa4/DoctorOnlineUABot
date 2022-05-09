@@ -12,6 +12,7 @@ from botbuilder.dialogs.dialog_reason import DialogReason
 
 from dialogs import LogoutDialog
 from helpers.activity_helper import create_finish_acivity
+from data_models import UserHistory
 
 zero_stage = ("Дитячі Лікарі", "Дорослі лікарі", "Псих. допомога")
 
@@ -117,9 +118,9 @@ first_stage = {"Дитячі Лікарі": childs_doc, "Дорослі ліка
 
 
 class MainDialog(LogoutDialog):
-    def __init__(self, connection_name: str):
-        super(MainDialog, self).__init__(MainDialog.__name__, connection_name)
-        self.history = []
+    def __init__(self, connection_name: str, dialog_id: str = None):
+        super(MainDialog, self).__init__(dialog_id or MainDialog.__name__, connection_name)
+        self.USER_INFO = "value-history"
         self.add_dialog(
             OAuthPrompt(
                 OAuthPrompt.__name__,
@@ -150,12 +151,14 @@ class MainDialog(LogoutDialog):
         self.initial_dialog_id = WaterfallDialog.__name__
 
     async def prompt_step(self, step_context: WaterfallStepContext) -> DialogTurnResult:
+
         return await step_context.begin_dialog(OAuthPrompt.__name__)
 
     async def login_step(self, step_context: WaterfallStepContext) -> DialogTurnResult:
         # Get the token from the previous step. Note that we could also have gotten the
         # token directly from the prompt itself. There is an example of this in the next method.
         if step_context.result:
+            step_context.values[self.USER_INFO] = UserHistory()
             await step_context.context.send_activity("Ви ввійшли в систему.")
             dialog: WaterfallDialog = await self.find_dialog(step_context.active_dialog.id)
             state = step_context.active_dialog.state
@@ -169,8 +172,9 @@ class MainDialog(LogoutDialog):
     async def phase1(
         self, step_context: WaterfallStepContext
     ) -> DialogTurnResult:
+        user_history: UserHistory = step_context.values[self.USER_INFO]
+        user_history.steps = [None, ]
         options = ["Дитячі Лікарі", "Дорослі лікарі", "Псих. допомога"]
-        self.history.append(None)
         return await step_context.prompt(
             ChoicePrompt.__name__,
             PromptOptions(
@@ -181,9 +185,10 @@ class MainDialog(LogoutDialog):
 
     async def phase2(self, step_context: WaterfallStepContext) -> DialogTurnResult:
         choice: FoundChoice = step_context.result
-        if type(choice) == FoundChoice:
+        user_history: UserHistory = step_context.values[self.USER_INFO]
+        if type(choice) in (FoundChoice, Choice):
             if choice.value:
-                self.history.append(choice.value)
+                user_history.steps.append(choice.value)
                 options = first_stage.get(choice.value).copy()
                 options.append("Назад")
                 return await step_context.prompt(
@@ -199,20 +204,20 @@ class MainDialog(LogoutDialog):
     async def phase3(
             self, step_context: WaterfallStepContext
     ) -> DialogTurnResult:
+        user_history: UserHistory = step_context.values[self.USER_INFO]
         choice: FoundChoice = step_context.result
-        first_choice = first_stage.get(self.history[1])
-        if type(choice) == FoundChoice:
+        first_choice = first_stage.get(user_history.steps[1])
+        if type(choice) in (FoundChoice, Choice):
             if choice.value == 'Назад':
                 # len(history) >= 2
-                self.history.pop()
-                previous_choice = self.history.pop()
+                previous_choice = user_history.steps.pop()
                 dialog: WaterfallDialog = await self.find_dialog(step_context.active_dialog.id)
                 state = step_context.active_dialog.state
                 return await dialog.run_step(step_context, state['stepIndex'] - 2, DialogReason.ReplaceCalled, Choice(value=previous_choice))
 
             elif choice.value in first_choice:
-                url_dict_in_stage = url_dict.get(self.history[-1])
-                self.history.append(choice.value)
+                url_dict_in_stage = url_dict.get(user_history.steps[-1])
+                user_history.steps.append(choice.value)
                 if choice.value == "Хірургія":
                     res_urls = url_dict_in_stage.get("Хірургія")
                     options = list(res_urls.keys()).copy()
@@ -235,19 +240,20 @@ class MainDialog(LogoutDialog):
     async def phase4(
             self, step_context: WaterfallStepContext
     ) -> DialogTurnResult:
+        user_history: UserHistory = step_context.values[self.USER_INFO]
         choice: FoundChoice = step_context.result
-        if type(choice) == FoundChoice:
+        if type(choice) in (FoundChoice, Choice):
             if choice.value == 'Назад':
                 # len(history) >= 2
-                self.history.pop()
-                previous_choice = self.history.pop()
+                user_history.steps.pop()
+                previous_choice = user_history.steps.pop()
                 dialog: WaterfallDialog = await self.find_dialog(step_context.active_dialog.id)
                 state = step_context.active_dialog.state
                 return await dialog.run_step(step_context, state['stepIndex'] - 2, DialogReason.ReplaceCalled,
                                              Choice(value=previous_choice))
 
             elif choice.value in surgery_doc:
-                self.history.append(choice.value)
+                user_history.steps.append(choice.value)
                 res_urls = surgery_url.get(choice.value)
                 response = await create_finish_acivity(res_urls.get("20", ""))
                 await step_context.context.send_activity(response)
@@ -257,12 +263,13 @@ class MainDialog(LogoutDialog):
     async def phase5(
             self, step_context: WaterfallStepContext
     ) -> DialogTurnResult:
+        user_history: UserHistory = step_context.values[self.USER_INFO]
         choice: FoundChoice = step_context.result
-        if type(choice) == FoundChoice:
+        if type(choice) in (FoundChoice, Choice):
             if choice.value == 'Назад':
                 # len(history) >= 2
-                self.history.pop()
-                previous_choice = self.history.pop()
+                user_history.steps.pop()
+                previous_choice = user_history.steps.pop()
                 dialog: WaterfallDialog = await self.find_dialog(step_context.active_dialog.id)
                 state = step_context.active_dialog.state
                 return await dialog.run_step(step_context, state['stepIndex'] - 2, DialogReason.ReplaceCalled,
